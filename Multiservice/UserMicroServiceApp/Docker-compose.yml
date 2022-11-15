@@ -1,0 +1,38 @@
+version: '3.3'
+services:
+  mongo:
+    image: mongo:3.2-jessie
+    ports:
+      - 27017:27017
+    container_name: mongo
+    network_mode: host
+  UserMovieServices:
+    image: usermovieservicesimages
+    build: UserMovieServices/
+    restart: "no"
+    network_mode: host
+    depends_on:
+      - mongo
+    ports:
+      - 8081:8081
+  UserAuthentication:
+    image: authenticationimage
+    build: UserAuthentication/
+    restart: "no"
+    network_mode: host
+    depends_on:
+      - mysqlservice
+    ports:
+      - 8082:8082
+  mysqlservice:
+    image: mysql:5.5
+    ports:
+      - 3306:3306
+    container_name: mysql-container
+    network_mode: host
+    hostname: localhost
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USERNAME: user
+      MYSQL_PASSWORD: C@llofduty1
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
